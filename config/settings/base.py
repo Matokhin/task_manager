@@ -113,6 +113,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 SIMPLE_JWT = {
@@ -122,7 +125,7 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': False,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
-    'AUTH_HEADER_TYPES': ('Holder',),
+    'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
 }

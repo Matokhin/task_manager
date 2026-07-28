@@ -49,6 +49,12 @@ class Task(models.Model):
         verbose_name="Исполнитель"
     )
 
+    tags = models.ManyToManyField(
+        "tags.Tag",
+        blank=True,
+        related_name="tasks",
+    )
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
 

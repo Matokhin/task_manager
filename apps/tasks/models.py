@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from apps.projects.models import Project
+from apps.tags.models import Tag
 
 
 User = get_user_model()
@@ -50,9 +51,10 @@ class Task(models.Model):
     )
 
     tags = models.ManyToManyField(
-        "tags.Tag",
+        Tag,
         blank=True,
         related_name="tasks",
+        verbose_name="Теги"
     )
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")

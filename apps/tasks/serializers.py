@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from .models import Task
-from tags.models import Tag
-from tags.serializers import TagSerializer
-from comments.serializers import CommentSerializer
+from apps.tags.models import Tag
+from apps.tags.serializers import TagSerializer
+from apps.comments.serializers import CommentSerializer
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     tag_ids = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
-        source='tags',
+        source='apps.tags',
         many=True,
         write_only=True,
         required=False,

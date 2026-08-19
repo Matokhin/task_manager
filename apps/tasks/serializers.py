@@ -17,7 +17,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     tag_ids = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
-        source='apps.tags',
+        source='tags',
         many=True,
         write_only=True,
         required=False,

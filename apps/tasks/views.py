@@ -13,18 +13,25 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        methods=['post'],
-        permission_classes=[permissions.IsAuthenticated],
+        methods=['get', 'post'],
+        permission_classes=[permissions.IsAuthenticatedOrReadOnly],
         url_path='comments'
     )
     def comments(self, request, pk=None):
 
         task = self.get_object()
 
-        serializer = CommentSerializer(data=request.data)
+        # --- ОБРАБОТКА GET-ЗАПРОСА ---
+        if request.method == 'GET':
+            comments = task.comments.all()
+            serializer = CommentSerializer(comments, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
-        if serializer.is_valid():
-            serializer.save(author=request.user, task=task)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # --- ОБРАБОТКА POST-ЗАПРОСА ---
+        if request.method == 'POST':
+            serializer = CommentSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(author=request.user, task=task)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

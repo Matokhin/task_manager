@@ -8,6 +8,8 @@ from .models import Task
 from .serializers import TaskSerializer
 from apps.comments.serializers import CommentSerializer
 from .filters import TaskFilter
+from .pagination import TaskPagination
+
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
@@ -40,9 +42,8 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-
     filterset_class = TaskFilter
-
     search_fields = ['title', 'description']
     ordering_fields = ['created_at', 'title']
     ordering = ['-created_at']
+    pagination_class = TaskPagination

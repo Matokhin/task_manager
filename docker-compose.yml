@@ -23,6 +23,12 @@ services:
     ports:
       - "6379:6379"
     restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 3s
 
   web:
     build: .
@@ -38,8 +44,14 @@ services:
       db:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
     restart: always
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/projects/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
 
 volumes:
   postgres_data:

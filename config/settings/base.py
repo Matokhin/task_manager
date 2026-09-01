@@ -149,3 +149,10 @@ CACHES = {
         },
     }
 }
+
+CELERY_BROKER_URL = "redis://redis:6379/2"  # Используем БД 2, чтобы не пересекаться с кэшем
+CELERY_RESULT_BACKEND = "redis://redis:6379/2"
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIME_ZONE = TIME_ZONE

@@ -2,13 +2,16 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from apps.projects.models import Project
 from .models import Task
 from .serializers import TaskSerializer
 from apps.comments.serializers import CommentSerializer
 from .filters import TaskFilter
 from .pagination import TaskPagination
+from .tasks import task_creation_log
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -47,3 +50,21 @@ class TaskViewSet(viewsets.ModelViewSet):
     ordering_fields = ['created_at', 'title']
     ordering = ['-created_at']
     pagination_class = TaskPagination
+
+    def perform_create(self, serializer):
+        project_id = self.request.data.get('project')
+
+        if not project_id:
+            raise ValidationError({"project": "Это поле обязательно."})
+        try:
+            project = Project.objects.get(id=project_id, owner=self.request.user)
+        except Project.DoesNotExist:
+            raise ValidationError({"project": "Проект не найден или у вас нет к нему доступа."})
+
+        task = serializer.save(assignee=self.request.user, project=project)
+
+        task_creation_log.delay(
+            task_id=task.id,
+            title=task.title,
+            assignee=self.request.user.username
+        )

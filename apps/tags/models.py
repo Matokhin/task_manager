@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 class Tag(models.Model):
-    name = models.CharField(
+    title = models.CharField(
         max_length=50,
         unique=True,
         verbose_name="Название тега"
@@ -23,6 +23,6 @@ class Tag(models.Model):
     class Meta:
         verbose_name = "Тег"
         verbose_name_plural = "Теги"
-        ordering = ["name"]
+        ordering = ["title"]
     def __str__(self):
-        return self.name
+        return self.title

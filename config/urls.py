@@ -8,4 +8,5 @@ urlpatterns = [
     path('api/projects/', include('apps.projects.urls')),
     path('api/tasks/', include('apps.tasks.urls')),
     path('api/tags/', include('apps.tags.urls')),
+    path('api/comments/', include('apps.comments.urls')),
 ]
